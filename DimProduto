@@ -1,0 +1,8 @@
+LOAD * INLINE [
+Código Produto,Produto,Código Categoria
+1,Caderno,1
+2,Caneta,1
+3,Lapiz,1
+4,Copo,2
+5,Prato,3
+];
