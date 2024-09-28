@@ -1,8 +1,58 @@
+// Carregando os produtos com mais linhas
 LOAD * INLINE [
-Código Produto,Produto,Código Categoria
-1,Caderno,1
-2,Caneta,1
-3,Lapiz,1
-4,Copo,2
-5,Prato,3
+Código Produto, Produto, Código Categoria
+1, Caderno, 1
+2, Caneta, 1
+3, Lapiz, 1
+4, Copo, 2
+5, Prato, 2
+6, Tesoura, 1
+7, Cola, 1
+8, Garfo, 2
+9, Faca, 2
+10, Panela, 2
+11, Borracha, 1
+12, Agenda, 1
+13, Colher, 2
+14, Xícara, 2
+15, Computador, 4
+16, Teclado, 4
+17, Mesa, 5
+18, Cadeira, 5
+19, Impressora, 4
+20, Monitor, 4
+];
+
+// Criando a tabela Categoria com mais linhas
+LOAD * INLINE [
+Código Categoria, Categoria
+1, Papelaria
+2, Utensílios
+3, Cozinha
+4, Eletrônicos
+5, Móveis
+];
+
+LOAD * INLINE [
+Pedido ID, Código Produto, Cliente, Quantidade, Valor Unitário
+101, 1, João, 10, 5.00
+102, 2, Maria, 15, 1.50
+103, 3, Carlos, 20, 0.75
+104, 4, Ana, 5, 12.00
+105, 5, Pedro, 8, 15.00
+106, 6, João, 3, 2.50
+107, 7, Carlos, 12, 4.00
+108, 8, Ana, 10, 8.00
+109, 9, Maria, 6, 9.50
+110, 10, Pedro, 4, 25.00
+111, 11, João, 9, 1.00
+112, 12, Maria, 2, 8.00
+113, 13, Carlos, 7, 5.50
+114, 14, Ana, 3, 18.00
+115, 15, Pedro, 1, 1000.00
+116, 16, João, 2, 200.00
+117, 17, Maria, 1, 500.00
+118, 18, Carlos, 2, 600.00
+119, 19, Ana, 1, 350.00
+120, 20, Pedro, 3, 800.00
 ];
