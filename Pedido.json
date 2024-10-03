@@ -1,0 +1,12 @@
+[
+  {"PedidoID": 1, "ClienteID": 1, "ProdutoID": 1, "Quantidade": 2, "Total": 3000.00, "DataPedido": "2023-01-15"},
+  {"PedidoID": 2, "ClienteID": 2, "ProdutoID": 2, "Quantidade": 1, "Total": 800.00, "DataPedido": "2023-01-17"},
+  {"PedidoID": 3, "ClienteID": 3, "ProdutoID": 5, "Quantidade": 5, "Total": 250.00, "DataPedido": "2023-02-10"},
+  {"PedidoID": 4, "ClienteID": 4, "ProdutoID": 8, "Quantidade": 3, "Total": 600.00, "DataPedido": "2023-02-14"},
+  {"PedidoID": 5, "ClienteID": 5, "ProdutoID": 6, "Quantidade": 4, "Total": 120.00, "DataPedido": "2023-03-01"},
+  {"PedidoID": 6, "ClienteID": 6, "ProdutoID": 3, "Quantidade": 2, "Total": 1200.00, "DataPedido": "2023-03-05"},
+  {"PedidoID": 7, "ClienteID": 7, "ProdutoID": 9, "Quantidade": 2, "Total": 240.00, "DataPedido": "2023-03-15"},
+  {"PedidoID": 8, "ClienteID": 8, "ProdutoID": 4, "Quantidade": 1, "Total": 300.00, "DataPedido": "2023-04-01"},
+  {"PedidoID": 9, "ClienteID": 9, "ProdutoID": 7, "Quantidade": 1, "Total": 250.00, "DataPedido": "2023-04-07"},
+  {"PedidoID": 10, "ClienteID": 10, "ProdutoID": 10, "Quantidade": 3, "Total": 240.00, "DataPedido": "2023-04-15"}
+]
