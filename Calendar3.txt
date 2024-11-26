@@ -1,0 +1,214 @@
+Periodos:
+LOAD 
+	 Text(YearStart(Date))					as YTDStart
+,	 Text(Date(Date))						as YTDEnd
+,	 Text(YearEnd(Date(Date)))				as YTGEnd
+,	 Text(Year(YearStart(Date(Date))))		as CurrentYear
+,	 Text(Year(YearStart(Date(Date)))-1)	as LastYear
+
+,	 Text(MonthStart(Date))					as MTDStart
+,	 Text(Date(Date))						as MTDEnd
+,	 Text(MonthEnd(Date(Date)))				as MTGEnd
+
+,	 Text(Date(Date-15))					as FifteenStart
+,	 Text(Date(Date))						as FifteenEnd
+
+,	 Text(MonthEnd(Date))					as MTDTrend
+,	 Text(AddYears(MonthEnd(Date),-1))		as LMTDTrend
+,	 Text(WeekStart(Date))					as WTDStart
+,	 Text(Date(Date))						as WTDEnd
+,	 Text(WeekEnd(Date(Date)))				as WTGEnd
+
+,	 Text(WeekStart(Date-7))				as LastWTDStart
+,	 Text(Date(Date-7))						as LastWTDEnd
+
+,	 Text(MonthStart(AddMonths(Date,-1)))	as LastMTDStart
+,	 Text(MonthEnd(AddMonths(Date,-1)))		as LastMTDEnd
+
+,	 Text(MonthStart(Date))					as LastMTDStartFirstDay
+,	 Text(MonthEnd(Date))					as LastMTDEndFirstDay
+
+,	 Text(Date(Date))						as CurrentDay
+,	 Text(Weekday(Date))					as CurrentWeekDay
+
+,	 Text(Date(MonthStart(Date),'YYYYMMDD'))	as MTDMetaStart
+,	 Text(Date(MonthEnd(Date),'YYYYMMDD'))		as MTDMetaEnd
+
+,	 Text(YearStart(Date-366))				as LYTDStart
+
+,	 IF(NUM(Date(Date-365,'DD/MM/YYYY'))>=NUM(DATE#('29/02/2016','DD/MM/YYYY')), Text(Date(Date-365)), Text(Date(Date-365)))					as LYTDEnd
+,	 IF(NUM(Date(Date-365,'DD/MM/YYYY'))>=NUM(DATE#('29/02/2016','DD/MM/YYYY')), Text(YearEnd(Date(Date-365))), Text(YearEnd(Date(Date-365))))	as LYTGEnd
+
+,	 Text(MonthStart(Date-366))				as LMTDStart
+
+,	 IF(NUM(Date(Date-365,'DD/MM/YYYY'))>=NUM(DATE#('29/02/2016','DD/MM/YYYY')), Text(Date(Date-365)), Text(Date(Date-365)))					as LMTDEnd
+,	 IF(NUM(Date(Date-365,'DD/MM/YYYY'))>=NUM(DATE#('29/02/2016','DD/MM/YYYY')), Text(MonthEnd(Date(Date-365))), Text(MonthEnd(Date(Date-365))))as LMTGEnd
+
+,	 Text(WeekStart(Date-364))				as LWTDStart
+,	 Text(Date(Date-364))					as LWTDEnd
+,	 Text(Date(Date-364)) 					as LastYearDay
+,	 Text(Date(Date-364-1)) 				as LastYearOntem
+
+,	 Text(date(monthstart(addmonths(Date,-12)),'YYYYMM')) as DataCompR
+,	 Text(Date(Date)) 						as Posicao
+,	 Text(Date(Date)) 						as ShowCurrentDay
+,	 Monthname((addmonths(Date,-1)))		as ShowLastMonth
+,	 Text(Date(Date)) 						as CurrentDate
+,	 Text(Date(Date,'YYYYMM'))				as CurrentMonth
+,	 Text(Capitalize(Date(Date,'MMMM')))	as CurrentMonthExtended
+
+,	 Text(WeekStart(Date-28))				as FourWeekStart
+,	 Text(WeekStart(WeekStart(Date-28)+28))	as FourWeekEnd
+
+,	 Text(WeekStart(Date-21))				as ThreeWeekStart
+,	 Text(WeekStart(WeekStart(Date-21)+21))	as ThreeWeekEnd
+
+,	 Text(WeekStart(Date-14))				as TwoWeekStart
+,	 Text(WeekStart(WeekStart(Date-14)+14))	as TwoWeekEnd
+
+,	 Text(WeekStart(AddYears(Date-28,-1)))					as LFourWeekStart
+,	 Text(WeekStart(WeekStart(AddYears(Date-28,-1))+28))	as LFourWeekEnd
+
+,	 text(date(weekstart(Today())-1,'YYYYMMDD')) as PesquisaPricing
+
+,	 Text(Week(MonthStart(Date))	&' - '&Year(MonthStart(Date)))		as SemanaUm
+,	 Text(Week(MonthStart(Date)+7)	&' - '&Year(MonthStart(Date)+7))	as SemanaDois
+,	 Text(Week(MonthStart(Date)+14)	&' - '&Year(MonthStart(Date)+14))	as SemanaTres
+,	 Text(Week(MonthStart(Date)+21)	&' - '&Year(MonthStart(Date)+21))	as SemanaQuatro
+,	 Text(Week(MonthStart(Date)+28)	&' - '&Year(MonthStart(Date)+28))	as SemanaCinco
+
+,	 WeekStart(MonthStart(Date))		as SemanaUmStart
+,	 WeekEnd(MonthStart(Date))			as SemanaUmEnd
+,	 if(WeekEnd(MonthStart(Date)) > date(today()-1), date(today()-1),WeekEnd(MonthStart(Date)))				as SemanaUmEndMTD
+
+,	 WeekStart(MonthStart(Date)+7)		as SemanaDoisStart
+,	 WeekEnd(MonthStart(Date)+7)		as SemanaDoisEnd
+,	 if(WeekEnd(MonthStart(Date)+7) > date(today()-1), date(today()-1),WeekEnd(MonthStart(Date)+7))			as SemanaDoisEndMTD
+
+,	 WeekStart(MonthStart(Date)+14)		as SemanaTresStart
+,	 WeekEnd(MonthStart(Date)+14)		as SemanaTresEnd
+,	 if(WeekEnd(MonthStart(Date)+14) > date(today()-1), date(today()-1),WeekEnd(MonthStart(Date)+14))		as SemanaTresEndMTD
+
+,	 WeekStart(MonthStart(Date)+21)		as SemanaQuatroStart
+,	 WeekEnd(MonthStart(Date)+21)		as SemanaQuatroEnd
+,	 if(WeekEnd(MonthStart(Date)+21) > date(today()-1), date(today()-1),WeekEnd(MonthStart(Date)+21))		as SemanaQuatroEndMTD
+
+,	 WeekStart(MonthStart(Date)+28)		as SemanaCincoStart
+,	 WeekEnd(MonthStart(Date)+28)		as SemanaCincoEnd
+,	 if(WeekEnd(MonthStart(Date)+28) > date(today()-1), date(today()-1),WeekEnd(MonthStart(Date)+28))		as SemanaCincoEndMTD
+
+;
+LOAD MAX(Data) AS Date Resident Calendario;
+
+//---------------------------------------------------------------------
+// Variaveis de Periodo
+
+	LET vYTDStartR		=		peek('YTDStart'		,'0','Periodos');
+	LET vYTDEndR		=		peek('YTDEnd'		,'0','Periodos');
+	LET vYTGEndR		=		peek('YTGEnd'		,'0','Periodos');
+	
+	LET vMTDStartR		=		peek('MTDStart'		,'0','Periodos');
+	LET vMTDEndR		=		peek('MTDEnd'		,'0','Periodos');
+	LET vMTGEndR		=		peek('MTGEnd'		,'0','Periodos');
+	
+	LET vFifteenStart	=		peek('FifteenStart'		,'0','Periodos');
+	LET vFifteenEnd		=		peek('FifteenEnd'		,'0','Periodos');
+	
+	LET vMTDTrendR		=		peek('MTDTrend'		,'0','Periodos');
+	LET vLMTDTrendR		=		peek('LMTDTrend'	,'0','Periodos');
+	LET vWTDStartR		=		peek('WTDStart'		,'0','Periodos');
+	LET vWTDEndR		=		peek('WTDEnd'		,'0','Periodos');
+	LET vWTGEndR		=		peek('WTGEnd'		,'0','Periodos');
+	
+	
+	LET vLastWTDStartR	=		peek('LastWTDStart'		,'0','Periodos');
+	LET vLastWTDEndR	=		peek('LastWTDEnd'		,'0','Periodos');
+	
+	LET vLastMTDStartR	=		peek('LastMTDStart'		,'0','Periodos');
+	LET vLastMTDEndR	=		peek('LastMTDEnd'		,'0','Periodos');
+
+	LET vLastMTDStartFirstDayR	=		peek('LastMTDStartFirstDay'		,'0','Periodos');
+	LET vLastMTDEndFirstDayR	=		peek('LastMTDEndFirstDay'		,'0','Periodos');
+
+	LET vCurrentDayR		=		chr(39)&peek('CurrentDay'		,'0','Periodos')&chr(39);
+	LET vCurrentWeekDayR	=		chr(39)&peek('CurrentWeekDay'	,'0','Periodos')&chr(39);
+
+	LET vLYTDStartR		=		peek('LYTDStart'	,'0','Periodos');
+	LET vLYTDEndR		=		peek('LYTDEnd'		,'0','Periodos');
+	LET vLYTGEndR		=		peek('LYTGEnd'		,'0','Periodos');
+	
+	LET vLMTDStartR		=		peek('LMTDStart'	,'0','Periodos');
+	LET vLMTDEndR		=		peek('LMTDEnd'		,'0','Periodos');
+	LET vLMTGEndR		=		peek('LMTGEnd'		,'0','Periodos');
+	
+	LET vLWTDStartR		=		peek('LWTDStart'	,'0','Periodos');
+	LET vLWTDEndR		=		peek('LWTDEnd'		,'0','Periodos');
+	LET vLastYearDayR	=		chr(39)&peek('LastYearDay'	,'0','Periodos')&chr(39);
+    LET LastYearOntemR	=		chr(39)&peek('LastYearOntem','0','Periodos')&chr(39);
+	
+	LET vMTDMetaStartR	=		peek('MTDMetaStart'	,'0','Periodos');
+	LET vMTDMetaEndR	=		peek('MTDMetaEnd'	,'0','Periodos');
+	
+	LET vDataCompR		=		peek('DataCompR'	,'0','Periodos');
+	LET vPosicaoR		=		peek('Posicao'		,'0','Periodos');
+	LET vShowCurrentDayR=		peek('ShowCurrentDay','0','Periodos');
+	LET vShowLastMonthR =		peek('ShowLastMonth','0','Periodos');
+	
+	LET vCurrentYearR	=		chr(39)&peek('CurrentYear','0','Periodos')&chr(39);
+	LET vLastYearR		=		chr(39)&peek('LastYear','0','Periodos')&chr(39);
+	LET vCurrentMonthR	=		chr(39)&peek('CurrentMonth'	,'0','Periodos')&chr(39);
+	LET vCurrentDateR	=		peek('CurrentDate'	,'0','Periodos');
+    
+    LET vLYTDStartR		=		peek('LYTDStart'	,'0','Periodos');
+	LET vLYTDEndR		=		peek('LYTDEnd'		,'0','Periodos');
+	LET vLYTGEndR		=		peek('LYTGEnd'		,'0','Periodos');
+	LET vRYTGEndR		=		chr(39)&peek('RYTGEnd'		,'0','Periodos')&chr(39);
+    
+    LET vLYTDStart_Cadastros = chr(39)&peek('LYTDStart_Cadastros','0','Periodos')&chr(39);
+	
+	LET vCurrentMonthRV	=		peek('CurrentMonthExtended'	,'0','Periodos');
+	
+	LET v4WeekStartR	=		peek('FourWeekStart'		,'0','Periodos');
+	LET v4WeekEndR		=		peek('FourWeekEnd'			,'0','Periodos');
+	
+	LET v3WeekStartR	=		peek('ThreeWeekStart'		,'0','Periodos');
+	LET v3WeekEndR		=		peek('ThreeWeekEnd'			,'0','Periodos');
+	
+	LET v2WeekStartR	=		peek('TwoWeekStart'	    	,'0','Periodos');
+	LET v2WeekEndR		=		peek('TwoWeekEnd'			,'0','Periodos');
+	
+	LET v4LWeekStartR	=		peek('LFourWeekStart'		,'0','Periodos');
+	LET v4LWeekEndR		=		peek('LFourWeekEnd'			,'0','Periodos');
+	
+	LET vPesquisaPricing =		peek('PesquisaPricing'		,'0','Periodos'); 
+	
+	LET vSemanaUm 		=		chr(39)&peek('SemanaUm'			,'0','Periodos')&chr(39); 
+	LET vSemanaDois 	=		chr(39)&peek('SemanaDois'		,'0','Periodos')&chr(39); 
+	LET vSemanaTres 	=		chr(39)&peek('SemanaTres'		,'0','Periodos')&chr(39); 
+	LET vSemanaQuatro 	=		chr(39)&peek('SemanaQuatro'		,'0','Periodos')&chr(39); 
+	LET vSemanaCinco 	=		chr(39)&peek('SemanaCinco'		,'0','Periodos')&chr(39); 
+	
+	LET vSemanaUmStart 		=		peek('SemanaUmStart'		,'0','Periodos'); 
+	LET vSemanaUmEnd 		=		peek('SemanaUmEnd'			,'0','Periodos'); 
+	LET vSemanaUmEndMTD 	=		peek('SemanaUmEndMTD'		,'0','Periodos'); 
+	
+	LET vSemanaDoisStart 	=		peek('SemanaDoisStart'		,'0','Periodos'); 
+	LET vSemanaDoisEnd 		=		peek('SemanaDoisEnd'		,'0','Periodos'); 
+	LET vSemanaDoisEndMTD 	=		peek('SemanaDoisEndMTD'		,'0','Periodos'); 
+	
+	LET vSemanaTresStart 	=		peek('SemanaTresStart'		,'0','Periodos'); 
+	LET vSemanaTresEnd 		=		peek('SemanaTresEnd'		,'0','Periodos'); 
+	LET vSemanaTresEndMTD 	=		peek('SemanaTresEndMTD'		,'0','Periodos'); 
+	
+	LET vSemanaQuatroStart 	=		peek('SemanaQuatroStart'	,'0','Periodos'); 
+	LET vSemanaQuatroEnd 	=		peek('SemanaQuatroEnd'		,'0','Periodos'); 
+	LET vSemanaQuatroEndMTD =		peek('SemanaQuatroEndMTD'	,'0','Periodos'); 
+	
+	LET vSemanaCincoStart 	=		peek('SemanaCincoStart'		,'0','Periodos');
+	LET vSemanaCincoEnd 	=		peek('SemanaCincoEnd'		,'0','Periodos');  
+	LET vSemanaCincoEndMTD	=		peek('SemanaCincoEndMTD'	,'0','Periodos');
+    LET vCurrentDayR30d     =       Date(Today()-31, 'DD/MM/YYYY');
+    LET VCUrrentDayR14d		=		Date(Today()-14, 'DD/MM/YYYY');
+    LET VLCUrrentDayR14d	=		Date(Today()-378, 'DD/MM/YYYY');
+    LET vOntem				=       Date(Today(0)-1, 'DD/MM/YYYY');
+    LET vLOntem				=       Date(AddYears(Today(0)-1,-1), 'DD/MM/YYYY');

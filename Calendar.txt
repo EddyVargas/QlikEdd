@@ -1,0 +1,79 @@
+DiaSemana:
+MAPPING LOAD * Inline [
+X,	Y,
+seg,SEGUNDA,
+ter,TERÇA,
+qua,QUARTA,
+qui,QUINTA,
+sex,SEXTA,
+sáb,SÁBADO,
+dom,DOMINGO,
+];
+
+Calendario:
+LOAD 
+	Date(DataOrçado,'YYYYMMDD')			as %BKCalendario
+,	Date(DataOrçado)					as DataTrend
+,	Date(Data) 							as Data 
+,	text(Date(Data,'YYYYMM'))			as AnoMesNr
+,	left(WeekStart(Data),5) &' a '& left(WeekEnd(Data),5) as SemanaExtenso
+,	if(isnull(Data), null(), Date(Data) &' '& if(not isnull(Data), [Dia Semana]))	as [Data DiaSemana]
+,	if(isnull(Data), null(), Date(Data) &' '& if(not isnull(Data), [Dia Semana]))	as [Data DiaSemana Comp]
+
+,	Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)) 																 as DataComp
+,   Date(if(year(Data)=year(today()-1), Data, Data+364)) 																 				 as DataCompCateg
+,	Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)) &'-'& WeekDay(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) 		 as [Data DiaSemanaComp]
+,	Year(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) 																		 as AnoComp
+,	Month(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)))																		 as MesComp
+,	Week(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) 																		 as SemanaComp
+,	WeekDay(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) 																	 as DiaSemanaComp
+,	Week(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) &'-'& WeekDay(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data))) as SequenciaComp
+,	ceil(Month(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)))/3)&'T' 															 as TrimestreComp
+,	ceil(Month(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)))/4)&'Q' 															 as QuadrimestreComp
+,	ceil(Month(Date(if(text(date(Data,'YYYYMMDD')) < '20181231', Data +364, Data)))/6)&'S' 															 as SemestreComp
+,	applymap('DiaSemana',text([Dia Semana])) as [Dia Semana Ext]
+//Date(if(Year(Data) = Year(Today())-1, Data +364, Data))
+,   DiaNum
+,   Semana	as Semana
+,	SemanaAdvanced	as SemanaAdvanced //Avançada
+,	SemanaAdvanced &' - '& WeekYear(Data)			as [SemanaAdvanced do Ano]
+,	WeekYear(Data) &' - '& SemanaAdvanced			as [Ano e Semana]
+,   SemanaNr
+,   SemanaMensal
+,   Ano
+,   Mes
+,   upper(Mes) as MesUpper
+,   MesNum
+,   ModifiedMonth
+,   Dia	
+,   NumeroDias 
+,   [Mes Ano Anterior]
+,   YTDFlag
+,   LYTDFlag
+,   RC12
+,   [Mes Ano]
+,	Ano &' '& Mes as [Ano Mes]
+,   [Semana do Ano]
+,   [Sequencia Semana]
+,   [Dia NumeroSemana]
+,   [Dia Semana]
+,   Trimestre
+,   Quadrimestre
+,   Semestre
+,   SemanaNum
+,   [Dias Uteis]
+,   [Dia Mes]
+,   [Dia Ano]
+,	'0' as FlagRealProjetado
+,	Ano&' - '&Semana as AnoSemana
+,	if(date(today()-1-364)>=Date(Data),'1','0') as Flag_Dia
+,	if(num(num(week(today()-1,0) & num(weekday(today()-1))))>=num(num(week(date(Data),0)-1 & num(weekday(date(Data))))),'1','0') as Flag_Semana
+,	if(num(num(month(today()-1))&num(day(today()-1),'00'))>= num(num(month(date(Data))))&num(day(date(Data)),'00'),'1','0') as Flag_Mes
+
+FROM lib://Swift Datafiles/DIMENSIONS/DIM_MASTERCALENDAR.qvd(qvd)
+WHERE TEXT(Date(DataOrçado,'YYYYMMDD')) >= $(_vVigencia);
+
+
+
+ 
+
