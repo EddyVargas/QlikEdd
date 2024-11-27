@@ -1,0 +1,227 @@
+Sub AuditCalendar (vs.RefPeriodTable, vs.RefPeriodField, vQty_Loop_MTH, vQty_Loop_MQT, vQty_Loop_MAT, vQty_Loop_YTD)
+
+[_RefDate]:
+LOAD
+    Date# (Date (Max ([$(vs.RefPeriodField)]), 'YYYYMM'), 'YYYYMM')    as _RefDate
+RESIDENT
+    [$(vs.RefPeriodTable)];
+
+vs.RefDate = Peek ('_RefDate');
+Drop Table [_RefDate];
+
+//*********************************************************
+//Generate MTH table
+//*********************************************************
+If vQty_Loop_MTH > 0 Then
+
+    For i_Loop = -1 to -$(vQty_Loop_MTH) step -1
+       
+        [_MTH]:
+        LOAD
+            *,
+            'F'                                                                                         as [MovingPeriod_Flag];
+        LOAD
+            MonthName (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), $(i_Loop) + 1))                    as [Des_MTH],
+            Fabs ($(i_Loop)) 										                                    as [Cod_Seq_MTH],
+            Date (MonthName (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), $(i_Loop) + 1)), 'YYYYMM')   as [$(vs.RefPeriodField)]
+        AUTOGENERATE(1);
+       
+    Next
+
+    [MTH]:
+    LEFT KEEP ([$(vs.RefPeriodTable)])
+    LOAD
+        *,
+        Null () as Aux
+    RESIDENT
+        [_MTH];
+
+    Drop Table [_MTH];
+    
+
+End If
+
+//*********************************************************
+//Generate MQT table
+//*********************************************************
+If vQty_Loop_MQT > 0 Then
+
+    For i_Loop = -1 to -$(vQty_Loop_MQT) step -1
+       
+        [_MQT]:
+        LOAD
+            *,
+            If (Mod (Cod_Seq_MQT, 3) = '1', 'F', 'M')                                                                                   as [MovingPeriod_Flag];
+        LOAD
+            MonthName (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), $(i_Loop) + 1))                                                    as [Des_MQT],
+            Fabs($(i_Loop))                                                                                                             as [Cod_Seq_MQT],
+            Date (MonthName (AddMonths (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), (RecNo() - 1) * -1), $(i_Loop) + 1)), 'YYYYMM')   as [$(vs.RefPeriodField)]
+        AUTOGENERATE (3);
+       
+    Next
+
+    [MQT]:
+    LEFT KEEP ([$(vs.RefPeriodTable)])
+    LOAD
+        *,
+        Null () as Aux
+    RESIDENT
+        [_MQT];
+
+    Drop Table [_MQT];       
+    
+    INNER JOIN ([MQT])
+    LOAD
+        [Des_MQT]
+    WHERE
+        [#_Months] = 3;
+    LOAD
+        [Des_MQT],
+        Count ([$(vs.RefPeriodField)]) as [#_Months]
+    RESIDENT
+        [MQT]
+    GROUP BY
+        [Des_MQT];
+
+End If
+
+//*********************************************************
+//Generate MAT table
+//*********************************************************
+If vQty_Loop_MAT > 0 Then
+
+    For i_Loop = -1 to -$(vQty_Loop_MAT) step -1
+       
+        [_MAT]:
+        LOAD
+            *,
+            If (Mod (Cod_Seq_MAT, 12) = '1', 'F', 'M')                                                                                          as [MovingPeriod_Flag];
+        LOAD
+            MonthName (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), $(i_Loop) + 1))                                                            as [Des_MAT],
+            Fabs($(i_Loop))                                                                                                                     as [Cod_Seq_MAT],
+            Date (MonthName (AddMonths (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), (RecNo() - 1) * -1), $(i_Loop) + 1)), 'YYYYMM')           as [$(vs.RefPeriodField)]
+        AUTOGENERATE (12);
+       
+    Next
+
+    [MAT]:
+    LEFT KEEP ([$(vs.RefPeriodTable)])
+    LOAD
+        *,
+        Null () as Aux
+    RESIDENT
+        [_MAT];
+
+    Drop Table [_MAT];
+
+    INNER JOIN (MAT)
+    LOAD
+        [Des_MAT]
+    WHERE
+        [#_Months] = 12;
+    LOAD
+        [Des_MAT],
+        Count ([$(vs.RefPeriodField)]) as [#_Months]
+    RESIDENT
+        [MAT]
+    GROUP BY
+        [Des_MAT];
+
+End If
+
+//*********************************************************
+//Generate YTD table
+//*********************************************************
+If vQty_Loop_YTD > 0 Then
+
+    For i_Loop = -1 to -$(vQty_Loop_YTD) step -1
+       
+        [_YTD]:
+        LOAD
+            *,
+            If (Mod (Cod_Seq_YTD, 12) = '1', 'F', 'M')                                                                                  as [MovingPeriod_Flag];
+        LOAD
+            MonthName (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), $(i_Loop) + 1))                                                    as [Des_YTD],
+            Fabs ($(i_Loop))                                                                                                            as [Cod_Seq_YTD],
+            Date (MonthName (AddMonths (AddMonths (Date# ('$(vs.RefDate)', 'YYYYMM'), (RecNo () - 1) * -1), $(i_Loop) + 1)), 'YYYYMM')  as [$(vs.RefPeriodField)]
+        AUTOGENERATE (12);
+       
+    Next
+
+    [YTD]:
+    LEFT KEEP ([$(vs.RefPeriodTable)])
+    LOAD
+        *,
+        Null () as Aux
+    RESIDENT
+        [_YTD];
+
+    Drop Table [_YTD];
+
+    INNER JOIN ([YTD])
+    LOAD
+        [Des_YTD],
+        [$(vs.RefPeriodField)]
+    RESIDENT
+        [YTD]
+    WHERE
+        Year ([$(vs.RefPeriodField)]) = Year (Des_YTD);
+
+    INNER JOIN ([YTD])
+    LOAD
+        [Des_YTD]
+    WHERE
+        Right (Min_Periodo, 2) = '01';
+    LOAD
+        [Des_YTD],
+        Text (Date (Min ([$(vs.RefPeriodField)]), 'MM')) as Min_Periodo
+    RESIDENT
+        [YTD]
+    GROUP BY
+        [Des_YTD];
+             
+End If
+
+/*********************************************************
+Generate calendar table
+*********************************************************/
+
+For Each vs.Period_Type in 'MTH', 'MQT', 'MAT', 'YTD'
+    If vQty_Loop_$(vs.Period_Type) > 0 Then
+
+        [_Calendar]:
+        LOAD DISTINCT
+            '$(vs.Period_Type)'                                             as [Period Type],
+            AutoNumber ([Cod_Seq_$(vs.Period_Type)], '$(vs.Period_Type)')   as [Period Type Sequence],
+            [Des_$(vs.Period_Type)]                                         as [Period],
+            Year ([Des_$(vs.Period_Type)])                                  as [Year],
+            Month ([Des_$(vs.Period_Type)])                                 as [Month],
+            [$(vs.RefPeriodField)]
+        RESIDENT
+            [$(vs.Period_Type)]
+        //WHERE
+            //[MovingPeriod_Flag] = 'F'
+        ORDER BY
+            [Cod_Seq_$(vs.Period_Type)] ASC;
+                    
+        Drop Tables [$(vs.Period_Type)];
+
+    End If
+Next
+//*********************************************************
+
+    [Calendar]:
+    NOCONCATENATE 
+    LOAD DISTINCT
+        *
+    RESIDENT
+        [_Calendar]
+    ORDER BY
+        [Period Type],
+        [Period Type Sequence];
+             
+//*********************************************************
+Drop Tables [_Calendar];
+//*********************************************************
+
+End Sub
