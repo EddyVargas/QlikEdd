@@ -16,31 +16,64 @@ const CONFIG = {
   webIntegrationId: 'KLa3Cs8iTjbVJdMCz5h1-RKU0KQw2Zaj',
 };
 
-/* ---------- IDs dos Objetos da Sheet (confirmados via Qlik MCP) ----------
-   Mapeamento: ID do objeto Qlik → ID do div no HTML
-   -------------------------------------------------------------------- */
+/* ---------- IDs dos Objetos na Sheet (gerados via Qlik MCP) ---------- */
 const OBJ = {
-  // ── Filtros (listbox) ─────────────────────────────────────────────
-  filterAno:        '52d11366-55e4-4ef3-8c04-023c32cdd925',  // → #filter-ano
-  filterMes:        '89d79e38-8955-48b5-ad58-3698e7dc9b5b',  // → #filter-mes
-  filterTrimestre:  'b342118c-1425-4cf0-9fd8-af074d657af8',  // → #filter-trimestre
+  // Filtros (listbox)
+  filterAno:        '52d11366-55e4-4ef3-8c04-023c32cdd925',
+  filterMes:        '89d79e38-8955-48b5-ad58-3698e7dc9b5b',
+  filterTrimestre:  'b342118c-1425-4cf0-9fd8-af074d657af8',
 
+  // Gráficos
+  barChart:         '7161abf1-9744-4a54-9c70-9d34f66f8890',
+  lineChart:        '43eb4630-b938-494d-a1d0-f53e7c7ff461',
+  pieChart:         '53ed03b2-b825-43dd-8a94-8b6b7ac104d6',
+  comboChart:       'a263c2ab-e30e-4a55-a6b3-90add0541f11',
+
+  // Tabela
+  table:            'a1702b7e-bd0e-4b35-be27-a741a189cda7',
+   
   // ── KPIs ──────────────────────────────────────────────────────────
   kpiReceita:       '8daf11d3-818b-47b0-b114-9037c8fa3a58',  // → #obj-kpi-receita
   kpiTicket:        '682493a7-d9b4-49b5-9271-b334c52e5109',  // → #obj-kpi-ticket
   kpiClientes:      '84a7ba71-9111-460c-8447-17769a9e0cae',  // → #obj-kpi-clientes
   kpiVendas:        '93ed5be3-2fc1-4e24-9a3f-d177c6c1fee3',  // → #obj-kpi-vendas
   kpiRecCliente:    '3a90d495-3932-4181-afd7-2d1a9aab7c88',  // → #obj-kpi-reccliente
-
-  // ── Gráficos ──────────────────────────────────────────────────────
-  barChart:         '7161abf1-9744-4a54-9c70-9d34f66f8890',  // → #obj-barchart
-  lineChart:        '43eb4630-b938-494d-a1d0-f53e7c7ff461',  // → #obj-linechart
-  pieChart:         '53ed03b2-b825-43dd-8a94-8b6b7ac104d6',  // → #obj-piechart
-  comboChart:       'a263c2ab-e30e-4a55-a6b3-90add0541f11',  // → #obj-combochart
-
-  // ── Tabela ────────────────────────────────────────────────────────
-  table:            'a1702b7e-bd0e-4b35-be27-a741a189cda7',  // → #obj-table
+  
 };
+
+/* ---------- Expressões dos KPIs (campos do modelo de dados) ---------- */
+const KPI_DEFS = [
+  {
+    id:         'obj-kpi-receita',
+    expression: "Sum({<StatusVenda={'>0'}>} ValorTotal)",
+    fallback:   "Sum(ValorTotal)",
+    format:     'currency',
+  },
+  {
+    id:         'obj-kpi-ticket',
+    expression: "Avg({<StatusVenda={'>0'}>} ValorTotal)",
+    fallback:   "Avg(ValorTotal)",
+    format:     'currency',
+  },
+  {
+    id:         'obj-kpi-clientes',
+    expression: "Count(DISTINCT IdCliente)",
+    fallback:   "Count(DISTINCT IdCliente)",
+    format:     'integer',
+  },
+  {
+    id:         'obj-kpi-vendas',
+    expression: "Count(IdVenda)",
+    fallback:   "Count(IdVenda)",
+    format:     'integer',
+  },
+  {
+    id:         'obj-kpi-reccliente',
+    expression: "Sum(ValorTotal) / Count(DISTINCT IdCliente)",
+    fallback:   "Sum(ValorTotal) / Count(DISTINCT IdCliente)",
+    format:     'currency',
+  },
+];
 
 /* ---------- UI: Sidebar & Navegação ---------- */
 (function initUI() {
@@ -51,8 +84,9 @@ const OBJ = {
   const pages       = document.querySelectorAll('.page');
   const btnReset    = document.getElementById('btnReset');
 
-  burger.addEventListener('click', function () {
-    if (window.innerWidth <= 900) {
+  burger.addEventListener('click', () => {
+    const isMobile = window.innerWidth <= 900;
+    if (isMobile) {
       sidebar.classList.toggle('open');
     } else {
       sidebar.classList.toggle('collapsed');
@@ -60,27 +94,40 @@ const OBJ = {
     }
   });
 
-  navItems.forEach(function (item) {
-    item.addEventListener('click', function () {
-      navItems.forEach(function (n) { n.classList.remove('active'); });
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(n => n.classList.remove('active'));
       item.classList.add('active');
-      pages.forEach(function (p) { p.classList.remove('active'); });
-      var el = document.getElementById('page-' + item.dataset.page);
+      const target = item.dataset.page;
+      pages.forEach(p => p.classList.remove('active'));
+      const el = document.getElementById('page-' + target);
       if (el) el.classList.add('active');
       document.querySelector('.page-title').textContent =
         item.querySelector('.nav-label').textContent + ' — Vendas';
     });
   });
 
-  btnReset.addEventListener('click', function () {
+  btnReset.addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('qlik:clearSelections'));
   });
 })();
 
+/* ---------- Helpers ---------- */
+function formatValue(val, type) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  if (type === 'currency') {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency', currency: 'BRL', maximumFractionDigits: 0
+    }).format(val);
+  }
+  return new Intl.NumberFormat('pt-BR').format(Math.round(val));
+}
+
 /* ---------- Qlik Sense Cloud — Capability API ----------
-   webIntegrationId DEVE estar dentro de config['js/qlik'],
-   não como propriedade de topo do require.config.
-   -------------------------------------------------------- */
+   IMPORTANTE: No Qlik Cloud o webIntegrationId DEVE ser passado dentro do
+   bloco config['js/qlik'] do require.config — não como propriedade de topo.
+   Ref: https://qlik.dev/tutorials/build-a-simple-mashup-using-capability-apis
+   -------------------------------------------------------------------- */
 require.config({
   baseUrl: 'https://' + CONFIG.host + '/resources',
   config: {
@@ -99,36 +146,64 @@ require(['js/qlik'], function (qlik) {
     console.error('[Qlik Mashup] Erro:', error.message || JSON.stringify(error));
   });
 
-  /* ── Abre o App ─────────────────────────────────────────────────── */
-  var app = qlik.openApp(CONFIG.appId, {
+  /* ---- Abre o App ---- */
+  const app = qlik.openApp(CONFIG.appId, {
     host:             CONFIG.host,
     prefix:           CONFIG.prefix,
     isSecure:         CONFIG.isSecure,
     webIntegrationId: CONFIG.webIntegrationId,
   });
 
-  /* ── Filtros no Topbar ───────────────────────────────────────────── */
+  /* ---- Filtros (listbox) no Topbar ---- */
   app.getObject('filter-ano',       OBJ.filterAno);
   app.getObject('filter-mes',       OBJ.filterMes);
   app.getObject('filter-trimestre', OBJ.filterTrimestre);
 
-  /* ── KPIs ────────────────────────────────────────────────────────── */
-  app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
-  app.getObject('obj-kpi-ticket',     OBJ.kpiTicket);
-  app.getObject('obj-kpi-clientes',   OBJ.kpiClientes);
-  app.getObject('obj-kpi-vendas',     OBJ.kpiVendas);
-  app.getObject('obj-kpi-reccliente', OBJ.kpiRecCliente);
-
-  /* ── Gráficos ────────────────────────────────────────────────────── */
+  /* ---- Gráficos da sheet ---- */
   app.getObject('obj-barchart',   OBJ.barChart);
   app.getObject('obj-linechart',  OBJ.lineChart);
   app.getObject('obj-piechart',   OBJ.pieChart);
   app.getObject('obj-combochart', OBJ.comboChart);
 
-  /* ── Tabela ──────────────────────────────────────────────────────── */
+  /* ---- Tabela ---- */
   app.getObject('obj-table', OBJ.table);
+app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
+  /* ---- KPIs via createCube (independente dos objetos da sheet) ----
+     Cria cubos de sessão diretamente no mashup para garantir que os
+     valores sejam calculados com as expressões corretas e atualizados
+     em tempo real conforme seleções do usuário.
+  ------------------------------------------------------------------- */
+  KPI_DEFS.forEach(function (kpi) {
+    const el = document.getElementById(kpi.id);
+    if (!el) return;
 
-  /* ── Reset Filtros ───────────────────────────────────────────────── */
+    el.textContent = '…';
+
+    app.createCube({
+      qMeasures: [{
+        qDef: {
+          qDef: kpi.expression,
+          qLabel: 'valor',
+        }
+      }],
+      qInitialDataFetch: [{ qTop: 0, qLeft: 0, qHeight: 1, qWidth: 1 }]
+    }, function (reply) {
+      try {
+        const pages = reply.qHyperCube.qDataPages;
+        if (pages && pages[0] && pages[0].qMatrix && pages[0].qMatrix[0]) {
+          const cell = pages[0].qMatrix[0][0];
+          el.textContent = formatValue(cell.qNum, kpi.format);
+        } else {
+          el.textContent = '—';
+        }
+      } catch (e) {
+        el.textContent = '—';
+        console.warn('[KPI ' + kpi.id + '] Erro ao ler cubo:', e);
+      }
+    });
+  });
+
+  /* ---- Reset Filtros ---- */
   document.addEventListener('qlik:clearSelections', function () {
     app.clearAll();
   });
