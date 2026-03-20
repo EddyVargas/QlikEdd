@@ -1,0 +1,315 @@
+/* ============================================================
+   vendas.css — Mashup Dashboard de Vendas · Qlik Sense Cloud
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg:        #0f1117;
+  --color-surface:   #1a1d27;
+  --color-surface2:  #22263a;
+  --color-border:    #2e3348;
+  --color-accent:    #00c4ff;
+  --color-accent2:   #6c63ff;
+  --color-success:   #00e5a0;
+  --color-warning:   #ffb547;
+  --color-text:      #e4e8f0;
+  --color-muted:     #7a82a0;
+  --sidebar-w:       220px;
+  --topbar-h:        64px;
+  --radius:          12px;
+  --shadow:          0 4px 24px rgba(0,0,0,.45);
+  --transition:      .22s ease;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform var(--transition);
+}
+
+.sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-w))); }
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.logo-icon { font-size: 1.4rem; }
+.logo-text { color: var(--color-accent); }
+
+.sidebar-nav {
+  list-style: none;
+  padding: 16px 0;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 2px 8px;
+  color: var(--color-muted);
+  font-size: .95rem;
+  transition: background var(--transition), color var(--transition);
+}
+.nav-item:hover { background: var(--color-surface2); color: var(--color-text); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(0,196,255,.15), transparent);
+  color: var(--color-accent);
+  font-weight: 600;
+  border-left: 3px solid var(--color-accent);
+}
+.nav-icon { font-size: 1.1rem; }
+
+.sidebar-footer { padding: 16px; border-top: 1px solid var(--color-border); }
+
+.btn-reset {
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-muted);
+  font-size: .9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.btn-reset:hover {
+  background: var(--color-surface2);
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+/* ---------- Main Content ---------- */
+.main-content {
+  margin-left: var(--sidebar-w);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: margin-left var(--transition);
+}
+.main-content.expanded { margin-left: 0; }
+
+/* ---------- Topbar ---------- */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.burger {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color var(--transition), background var(--transition);
+}
+.burger:hover { background: var(--color-surface2); color: var(--color-text); }
+
+.page-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.topbar-filters {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-surface2);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 4px 10px 4px 10px;
+  min-width: 130px;
+  max-width: 200px;
+}
+.filter-label {
+  font-size: .75rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.qlik-filter {
+  flex: 1;
+  min-height: 28px;
+}
+/* Qlik listbox injected into small chip */
+.qlik-filter .qlik-listbox-container,
+.qlik-filter .listbox-container { height: 28px !important; overflow: hidden; }
+
+/* ---------- Pages ---------- */
+.page {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  gap: 20px;
+  flex-direction: column;
+}
+.page.active { display: flex; }
+
+/* ---------- KPI Row ---------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.kpi-card:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+
+.kpi-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+.kpi-inner { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi-title { font-size: .75rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: .6px; }
+.kpi-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  min-height: 32px;
+}
+
+/* colour variants */
+#kpi-ticket   .kpi-value { color: var(--color-accent2); }
+#kpi-clientes .kpi-value { color: var(--color-success); }
+#kpi-vendas   .kpi-value { color: var(--color-warning); }
+#kpi-reccliente .kpi-value { color: #ff6b9d; }
+
+/* ---------- Charts ---------- */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 16px;
+}
+
+.chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 280px;
+}
+
+.chart-title {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+}
+
+.chart-wide { /* already wider via grid */ }
+
+.table-row { display: flex; }
+.chart-full { flex: 1; }
+
+/* ---------- Qlik Object Containers ---------- */
+.qlik-obj {
+  flex: 1;
+  min-height: 220px;
+  width: 100%;
+}
+.qlik-obj-tall { min-height: 320px; }
+
+/* Remove Qlik default outer padding in embedded objects */
+.qlik-obj .qv-object-content-container { padding: 0 !important; }
+
+/* ---------- Placeholder Pages ---------- */
+.placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--color-muted);
+  text-align: center;
+}
+.placeholder-icon { font-size: 4rem; opacity: .5; }
+.placeholder h2 { font-size: 1.4rem; color: var(--color-text); }
+.placeholder p { font-size: .95rem; max-width: 360px; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .charts-row { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .kpi-row { grid-template-columns: 1fr; }
+  .topbar-filters { display: none; }
+}

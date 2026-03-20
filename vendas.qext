@@ -1,0 +1,8 @@
+{
+  "name": "vendas",
+  "description": "Dashboard de Vendas - Mashup Qlik Cloud",
+  "version": "1.0.0",
+  "type": "mashup",
+  "author": "Claude + Qlik MCP",
+  "tenant": "https://cloudcapacity-nvchile.us.qlikcloud.com/"
+}
