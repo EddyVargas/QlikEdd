@@ -167,7 +167,8 @@ require(['js/qlik'], function (qlik) {
 
   /* ---- Tabela ---- */
   app.getObject('obj-table', OBJ.table);
-app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
+
+   //app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
   /* ---- KPIs via createCube (independente dos objetos da sheet) ----
      Cria cubos de sessão diretamente no mashup para garantir que os
      valores sejam calculados com as expressões corretas e atualizados
