@@ -12,6 +12,7 @@ const CONFIG = {
   prefix: '/',
   appId:  '34122366-7c20-4c27-84da-64b0f4d121b6',
   isSecure: true,
+  webIntegrationId: 'KLa3Cs8iTjbVJdMCz5h1-RKU0KQw2Zaj'
 };
 
 /* ---------- IDs dos Objetos (gerados via Qlik MCP) ---------- */
@@ -80,7 +81,7 @@ const OBJ = {
 /* ---------- Qlik Mashup API ---------- */
 require.config({
   baseUrl: `https://${CONFIG.host}${CONFIG.prefix}resources`,
-  webIntegrationId: undefined, // Adicione o Web Integration ID aqui se necessário
+  webIntegrationId: CONFIG.webIntegrationId, // Adicione o Web Integration ID aqui se necessário
 });
 
 require(['js/qlik'], function(qlik) {
