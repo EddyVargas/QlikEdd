@@ -32,12 +32,12 @@ const OBJ = {
   // Tabela
   table:            'a1702b7e-bd0e-4b35-be27-a741a189cda7',
    
-  // ── KPIs ──────────────────────────────────────────────────────────
+  /*/ ── KPIs ──────────────────────────────────────────────────────────
   kpiReceita:       '8daf11d3-818b-47b0-b114-9037c8fa3a58',  // → #obj-kpi-receita
   kpiTicket:        '682493a7-d9b4-49b5-9271-b334c52e5109',  // → #obj-kpi-ticket
   kpiClientes:      '84a7ba71-9111-460c-8447-17769a9e0cae',  // → #obj-kpi-clientes
   kpiVendas:        '93ed5be3-2fc1-4e24-9a3f-d177c6c1fee3',  // → #obj-kpi-vendas
-  kpiRecCliente:    '3a90d495-3932-4181-afd7-2d1a9aab7c88',  // → #obj-kpi-reccliente
+  kpiRecCliente:    '3a90d495-3932-4181-afd7-2d1a9aab7c88',  // → #obj-kpi-reccliente */
   
 };
 
