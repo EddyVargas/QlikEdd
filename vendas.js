@@ -12,6 +12,7 @@ const CONFIG = {
   host:             'cloudcapacity-nvchile.us.qlikcloud.com',
   prefix:           '/',
   appId:            '34122366-7c20-4c27-84da-64b0f4d121b6',
+   port: 443,
   isSecure:         true,
   webIntegrationId: 'KLa3Cs8iTjbVJdMCz5h1-RKU0KQw2Zaj',
 };
@@ -88,17 +89,10 @@ const OBJ = {
 })();
 
 /* ---------- Qlik ---------- */
-require.config({
-  baseUrl: 'https://' + CONFIG.host + '/resources',
-  config: {
-    'js/qlik': {
-      host: CONFIG.host,
-      prefix: CONFIG.prefix,
-      isSecure: CONFIG.isSecure,
-      webIntegrationId: CONFIG.webIntegrationId,
-    }
-  }
-});
+require.config( {
+    baseUrl: ( CONFIG.isSecure ? "https://" : "http://" ) + CONFIG.host + (CONFIG.port ? ":" + CONFIG.port : "") + CONFIG.prefix + "resources",
+    webIntegrationId: CONFIG.webIntegrationId
+} );	
 
 require(['js/qlik'], function (qlik) {
 
