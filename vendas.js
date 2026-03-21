@@ -102,26 +102,39 @@ require(['js/qlik'], function (qlik) {
 
   const app = qlik.openApp(CONFIG.appId, CONFIG);
 
-  /* ---------- Filtros ---------- */
-  app.getObject('filter-ano',       OBJ.filterAno);
-  app.getObject('filter-mes',       OBJ.filterMes);
-  app.getObject('filter-trimestre', OBJ.filterTrimestre);
+// Simulação de valor default
+function getFiltroInicial(callback) {
+    callback("2025"); // exemplo: Ano
+}
 
-  /* ---------- Gráficos ---------- */
-  app.getObject('obj-barchart',   OBJ.barChart);
-  app.getObject('obj-linechart',  OBJ.lineChart);
-  app.getObject('obj-piechart',   OBJ.pieChart);
-  app.getObject('obj-combochart', OBJ.comboChart);
+// Executa seleção + renderização
+getFiltroInicial(function(valor) {
 
-  /* ---------- Tabela ---------- */
-  app.getObject('obj-table', OBJ.table);
+    app.field("Ano").selectMatch(valor)
+    .then(function() {
 
-  /* ---------- KPIs ---------- */
-  app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
-  app.getObject('obj-kpi-ticket',     OBJ.kpiTicket);
-  app.getObject('obj-kpi-clientes',   OBJ.kpiClientes);
-  app.getObject('obj-kpi-vendas',     OBJ.kpiVendas);
-  app.getObject('obj-kpi-reccliente', OBJ.kpiRecCliente);
+        // KPIs
+        app.visualization.get('8daf11d3-818b-47b0-b114-9037c8fa3a58').then(vis => vis.show("obj-kpi-receita"));
+        app.visualization.get('682493a7-d9b4-49b5-9271-b334c52e5109').then(vis => vis.show("obj-kpi-ticket"));
+        app.visualization.get('84a7ba71-9111-460c-8447-17769a9e0cae').then(vis => vis.show("obj-kpi-clientes"));
+        app.visualization.get('93ed5be3-2fc1-4e24-9a3f-d177c6c1fee3').then(vis => vis.show("obj-kpi-vendas"));
+        app.visualization.get('3a90d495-3932-4181-afd7-2d1a9aab7c88').then(vis => vis.show("obj-kpi-reccliente"));
+
+        // Gráficos
+        app.visualization.get('7161abf1-9744-4a54-9c70-9d34f66f8890').then(vis => vis.show("obj-barchart"));
+        app.visualization.get('43eb4630-b938-494d-a1d0-f53e7c7ff461').then(vis => vis.show("obj-linechart"));
+        app.visualization.get('53ed03b2-b825-43dd-8a94-8b6b7ac104d6').then(vis => vis.show("obj-piechart"));
+        app.visualization.get('a263c2ab-e30e-4a55-a6b3-90add0541f11').then(vis => vis.show("obj-combochart"));
+
+        // Tabela
+        app.visualization.get('a1702b7e-bd0e-4b35-be27-a741a189cda7').then(vis => vis.show("obj-table"));
+
+    })
+    .catch(function(err){
+        console.error("Erro na seleção:", err);
+    });
+
+});
 
   /* ---------- Reset ---------- */
   document.addEventListener('qlik:clearSelections', function () {
