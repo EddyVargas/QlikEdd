@@ -8,7 +8,7 @@
 'use strict';
 
 /* ---------- Configuração ---------- */
-const config = {
+const CONFIG = {
   host:             'cloudcapacity-nvchile.us.qlikcloud.com',
   prefix:           '/',
   appId:            '34122366-7c20-4c27-84da-64b0f4d121b6',
@@ -90,8 +90,8 @@ const OBJ = {
 
 /* ---------- Qlik ---------- */
 require.config( {
-    baseUrl: ( config.isSecure ? "https://" : "http://" ) + config.host + (config.port ? ":" + config.port : "") + config.prefix + "resources",
-    webIntegrationId: config.webIntegrationId
+    baseUrl: ( CONFIG.isSecure ? "https://" : "http://" ) + CONFIG.host + (CONFIG.port ? ":" + CONFIG.port : "") + CONFIG.prefix + "resources",
+    webIntegrationId: CONFIG.webIntegrationId
 } );	
 
 require(['js/qlik'], function (qlik) {
