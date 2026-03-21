@@ -114,12 +114,14 @@ fetch('https://' + CONFIG.host + '/api/v1/users/me', {
 });
 
 /* ---------- Carrega objetos Qlik ---------- */
-function carregarQlik() {
-  require(['js/qlik'], function (qlik) {
-
-    qlik.setOnError(function (error) {
-      console.error('[Qlik] Erro:', error.message || JSON.stringify(error));
-    });
+require( ["js/qlik"], function ( qlik ) {
+	qlik.on( "error", function ( error ) {
+		$( '#popupText' ).append( error.message + "<br>" );
+		$( '#popup' ).fadeIn( 1000 );
+	} );
+	$( "#closePopup" ).click( function () {
+		$( '#popup' ).hide();
+	} );
 
     var app = qlik.openApp(CONFIG.appId, {
       host:             CONFIG.host,
