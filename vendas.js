@@ -16,6 +16,7 @@ var CONFIG = {
   host:             'cloudcapacity-nvchile.us.qlikcloud.com',
   prefix:           '/',
   appId:            '34122366-7c20-4c27-84da-64b0f4d121b6',
+   port: 443,
   isSecure:         true,
   webIntegrationId: 'KLa3Cs8iTjbVJdMCz5h1-RKU0KQw2Zaj',
 };
@@ -81,17 +82,10 @@ var OBJ = {
    A origem do mashup DEVE estar na allowlist do Web Integration ID.
    O require.config recebe o webIntegrationId dentro de config['js/qlik'].
    ------------------------------------------------------------ */
-require.config({
-  baseUrl: 'https://' + CONFIG.host + '/resources',
-  config: {
-    'js/qlik': {
-      host:             CONFIG.host,
-      prefix:           CONFIG.prefix,
-      isSecure:         CONFIG.isSecure,
-      webIntegrationId: CONFIG.webIntegrationId,
-    }
-  }
-});
+require.config( {
+    baseUrl: ( CONFIG.isSecure ? "https://" : "http://" ) + CONFIG.host + (CONFIG.port ? ":" + CONFIG.port : "") + CONFIG.prefix + "resources",
+    webIntegrationId: CONFIG.webIntegrationId
+} );
 
 /* ---------- Verifica sessão antes de carregar objetos ----------
    Se o usuário não estiver autenticado no tenant, redireciona
