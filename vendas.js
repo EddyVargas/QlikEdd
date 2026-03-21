@@ -7,7 +7,7 @@ const CONFIG = {
   port: 443,
   isSecure: true,
   appId: '34122366-7c20-4c27-84da-64b0f4d121b6',
-  webIntegrationId: 'KLa3Cs8iTjbVJdMCz5h1-RKU0KQw2Zaj'
+  webIntegrationId: 'KLa3'
 };
 
 /* ---------- REQUIRE CONFIG ---------- */
