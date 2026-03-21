@@ -30,6 +30,13 @@ const OBJ = {
   pieChart:         '53ed03b2-b825-43dd-8a94-8b6b7ac104d6',
   comboChart:       'a263c2ab-e30e-4a55-a6b3-90add0541f11',
 
+  // KPIs
+  kpiReceita:       '8daf11d3-818b-47b0-b114-9037c8fa3a58',
+  kpiTicket:        '682493a7-d9b4-49b5-9271-b334c52e5109',
+  kpiClientes:      '84a7ba71-9111-460c-8447-17769a9e0cae',
+  kpiVendas:        '93ed5be3-2fc1-4e24-9a3f-d177c6c1fee3',
+  kpiRecCliente:    '3a90d495-3932-4181-afd7-2d1a9aab7c88',
+   
   // Tabela
   table:            'a1702b7e-bd0e-4b35-be27-a741a189cda7',
 };
@@ -145,6 +152,13 @@ require(['js/qlik'], function (qlik) {
   app.getObject('filter-ano',       OBJ.filterAno);
   app.getObject('filter-mes',       OBJ.filterMes);
   app.getObject('filter-trimestre', OBJ.filterTrimestre);
+
+   /* KPIs */
+    app.getObject('obj-kpi-receita',    OBJ.kpiReceita);
+    app.getObject('obj-kpi-ticket',     OBJ.kpiTicket);
+    app.getObject('obj-kpi-clientes',   OBJ.kpiClientes);
+    app.getObject('obj-kpi-vendas',     OBJ.kpiVendas);
+    app.getObject('obj-kpi-reccliente', OBJ.kpiRecCliente);
 
   /* ---- Gráficos da sheet ---- */
   app.getObject('obj-barchart',   OBJ.barChart);
