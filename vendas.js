@@ -13,7 +13,7 @@
 
 /* ---------- Configuração ---------- */
 var CONFIG = {
-  host:             'https://cloudcapacity-nvchile.us.qlikcloud.com',
+  host:             'cloudcapacity-nvchile.us.qlikcloud.com',
   prefix:           '/',
   appId:            '34122366-7c20-4c27-84da-64b0f4d121b6',
   isSecure:         true,
